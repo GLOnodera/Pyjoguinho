@@ -1,10 +1,8 @@
 import time
 from util import Mapa
 
-class Control(Mapa): # A Classe Control Herdando da Classe Mapa
+class Control(Mapa):
     def __init__(self):
-        # Inicializa a classe Pai
-        ## seu código aqui
         super().__init__()
 
         # maquina de estados
@@ -17,48 +15,42 @@ class Control(Mapa): # A Classe Control Herdando da Classe Mapa
         }
     
     def forward(self) -> None:
-        # Move subtraindo 1 uma linha
-        # Atualiza a posição
-        pass
+        new_position = (self.posicao[0] - 1, self.posicao[1])  # Move subtraindo 1 da linha
+        self.atualizar_posicao(new_position)
+        self.mostrar()
+        if new_position[0] == 0:
+            self.robot_state = 'stop'
 
     def left(self) -> None:
-        # Move subtraindo 1 uma coluna
-        # Atualiza a posição
-        pass
+        new_position = (self.posicao[0], self.posicao[1] - 1)  # Move subtraindo 1 da coluna
+        self.atualizar_posicao(new_position)
+        self.mostrar()
 
     def right(self) -> None:
-        # Move somando 1 uma coluna
-        # Atualiza a posição
-        pass
+        new_position = (self.posicao[0], self.posicao[1] + 1)  # Move somando 1 à coluna
+        self.atualizar_posicao(new_position)
+        self.mostrar()
     
     def stop(self) -> None:
-        # Não faz nada
         pass
 
     def control(self) -> None:
-        # Verifica se a posição acima está livre, se sim, move para cima.
-        # Se não, verifica se a posição à esquerda ou à direita está livre, se sim, move para um dos lados.
-        # Pare quando estiver na primeira linha.
-        
+        if self.robot_state == 'stop':
+            return
 
-        # Chamada do método de movimento a partir do dicionário
-        # por exemplo.....
-        # self.robot_state = 'forward'  # para mudar o estado
-        # self.state_machine[self.robot_state]() # para chamar o método correspondente
+        if self.posicao[0] > 0 and self.grade[self.posicao[0] - 1, self.posicao[1]] == 0:
+            self.robot_state = 'forward'
+        elif self.posicao[1] > 0 and self.grade[self.posicao[0], self.posicao[1] - 1] == 0:
+            self.robot_state = 'left'
+        elif self.posicao[1] < self.colunas - 1 and self.grade[self.posicao[0], self.posicao[1] + 1] == 0:
+            self.robot_state = 'right'
+        else:
+            self.robot_state = 'stop'
 
+        self.state_machine[self.robot_state]()
 
-
-        # Mostre a grade atual
-        
-        pass
-        
 def main():
-    # Inicializa a classe Control como control
-    # seu código aqui
-    
-    
-    
-    #chama o método mostrar
+    control = Control()
     control.mostrar()
 
     i = 40
